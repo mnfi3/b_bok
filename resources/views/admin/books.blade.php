@@ -153,14 +153,13 @@
         </form>
         <div style="width: 100%;height: 2px;background-color: #1b9abd;margin-top: 10px" class="mb-5"></div>
         <h4 class="mt-4"> <strong>همه کتاب ها</strong></h4>
-        <form action="{{route('book-search')}}" method="get" class="mt-2 mb-5 text-center">
+        <form action="{{route('admin-books')}}" method="get" class="mt-2 mb-5 text-center">
             @csrf
             <div class="form-group  d-flex align-items-center justify-content-center">
                 <div class=" " style="min-width: 40%">
-                    <input  name="text" type="text" class="form-control" style="border: 1px darkorange solid"
-                            @if(!empty($search))
-                            value="{{$search}}"
-                            @endif
+                    <input  name="text"  type="text" class="form-control" style="border: 1px darkorange solid"
+
+                            value="{{$text}}"
                             placeholder="بخشی از نام کتاب یا نویسنده را وارد کنید" >
                 </div>
                 <button type="submit" class="btn btn-outline-info text-white " style="width: 8%;background: #1b9abd;margin-right: 10px">جستجو</button>

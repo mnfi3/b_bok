@@ -6,6 +6,39 @@
 
 
 
+
+
+
+
+
+
+
+
+
+    <div class="container-fluid py-3 slide-background">
+
+    <div class="slide-container m-auto">
+    <div id="carousel" class="swiper-container carousel" dir="rtl">
+    <div class="swiper-wrapper">
+    @foreach($sliders as $slider)
+    <div class="swiper-slide"><img class="w-100" src="{{asset($slider->image_path)}}"/></div>
+    @endforeach
+    </div>
+    <!-- Add Pagination -->
+    <div class="swiper-pagination"></div>
+    <!-- Add Arrows -->
+    <div class="swiper-button-next"></div>
+    <div class="swiper-button-prev"></div>
+    </div>
+    </div>
+    </div>
+
+
+
+
+
+
+
     <div class=" bg-light books-container p-3">
 
 

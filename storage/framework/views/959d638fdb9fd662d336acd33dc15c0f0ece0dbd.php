@@ -6,9 +6,8 @@
 
                 <p class="mt-3"><strong>آدرس : </strong>
                     <br>
-                    تبریز
-                    ،٣٥ کیلومتری جاده تبریز-مراغه
-                    ،دانشگاه شهید مدنی آذربایجان، کتابخانه مرکزی
+                    <?php echo e(\App\Setting::get(\App\Setting::KEY_ADDRESS)->value); ?>
+
                     <br><br>
                 </p>
 
@@ -18,19 +17,19 @@
                 <h5>کارشناس انتشارات</h5>
                 <ul class="mt-3 p-0" >
                     <li class="m-2">
-                        <strong>رضا نصرتی </strong>
+                        <strong> <?php echo e(\App\Setting::get(\App\Setting::KEY_EXPERT_NAME)->value); ?> </strong>
                     </li>
                     <li class="m-2">
                         <strong>شماره تماس مستقیم:</strong>
-                        <span>34327567-041</span>
+                        <span> <?php echo e(\App\Setting::get(\App\Setting::KEY_EXPERT_DIRECT_PHONE)->value); ?></span>
                     </li>
                     <li class="m-2">
                         <strong>شماره تماس داخلی: </strong>
-                        <span>2457</span>
+                        <span> <?php echo e(\App\Setting::get(\App\Setting::KEY_EXPERT_INTERNAL_PHONE)->value); ?></span>
                     </li>
                     <li class="m-2">
                         <strong>ایمیل: </strong>
-                        <span>nosrati_r@yahoo.com</span>
+                        <span> <?php echo e(\App\Setting::get(\App\Setting::KEY_EXPERT_EMAIL)->value); ?></span>
                     </li>
                 </ul>
 
@@ -39,19 +38,19 @@
                 <h5>دبیر انتشارات</h5>
                 <ul class="mt-3 p-0">
                     <li class="m-2">
-                        <strong>دکتر جواد مصرآبادی</strong>
+                        <strong> <?php echo e(\App\Setting::get(\App\Setting::KEY_BOSS_NAME)->value); ?></strong>
                     </li>
                     <li class="m-2">
                         <strong>شماره تماس مستقیم:</strong>
-                        <span>34327567-041</span>
+                        <span> <?php echo e(\App\Setting::get(\App\Setting::KEY_BOSS_DIRECT_PHONE)->value); ?></span>
                     </li>
                     <li class="m-2">
                         <strong>شماره تماس داخلی: </strong>
-                        <span>2456</span>
+                        <span> <?php echo e(\App\Setting::get(\App\Setting::KEY_BOSS_INTERNAL_PHONE)->value); ?></span>
                     </li>
                     <li class="m-2">
                         <strong>ایمیل: </strong>
-                        <span>mesrabadi@azaruniv.ac.ir</span>
+                        <span> <?php echo e(\App\Setting::get(\App\Setting::KEY_BOSS_EMAIL)->value); ?></span>
                     </li>
                 </ul>
 
@@ -60,11 +59,9 @@
 
                 <h5>لینک های داخلی</h5>
                 <ul class="p-0 mt-3">
-                    <li><a target="_blank" href="http://azaruniv.ac.ir">دانشگاه شهید مدنی آذربایجان</a>
-                    </li>
-                    <li><a target="_blank"
-                           href="https://www.google.com/maps/place/East+Azerbaijan+Province,+Mamaqan,+Allameh+Amini+St,+%D8%B3%D8%A7%D8%AE%D8%AA%D9%85%D8%A7%D9%86+%D8%B9%D9%84%D8%A7%D9%85%D9%87+%D8%AC%D8%B9%D9%81%D8%B1%DB%8C%D8%8C+Iran%E2%80%AD/@37.8143816,45.9468963,17z/data=!3m1!4b1!4m12!1m6!3m5!1s0x401a616a2e570e45:0xce988b5a3c1d4573!2sAzarbaijan+Shahid+Madani+University!8m2!3d37.8141025!4d45.9534153!3m4!1s0x401a614106d54e75:0x9da4dff467f50b1f!8m2!3d37.8143816!4d45.949085">موقعیت
-                            مکانی انتشارات</a>
+                    <li><a target="_blank" href=" <?php echo e(\App\Setting::get(\App\Setting::KEY_LINK1_URL)->value); ?>"> <?php echo e(\App\Setting::get(\App\Setting::KEY_LINK1_TITLE)->value); ?></a></li>
+                    <li><a target="_blank" href=" <?php echo e(\App\Setting::get(\App\Setting::KEY_LINK2_URL)->value); ?>"> <?php echo e(\App\Setting::get(\App\Setting::KEY_LINK2_TITLE)->value); ?></a>
+                    <li><a target="_blank" href=" <?php echo e(\App\Setting::get(\App\Setting::KEY_LINK3_URL)->value); ?>"> <?php echo e(\App\Setting::get(\App\Setting::KEY_LINK3_TITLE)->value); ?></a>
                     </li>
                 </ul>
             </div>

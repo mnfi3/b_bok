@@ -30,6 +30,7 @@ Route::get('/admin-orders','AdminController@orders')->name('admin-orders');
 Route::post('/admin-orders-search','AdminController@ordersSearch')->name('admin-orders-search');
 Route::post('/admin-send-order', 'AdminController@sendOrder')->name('admin-send-order');
 Route::get('/admin-site', 'AdminController@site')->name('admin-site');
+Route::post('/admin-save-footer', 'AdminController@saveFooterData')->name('admin-save-footer');
 Route::post('/admin-slider-remove', 'AdminController@sliderRemove')->name('admin-slider-remove');
 Route::post('/admin-slider-insert', 'AdminController@insertSlider')->name('admin-slider-insert');
 

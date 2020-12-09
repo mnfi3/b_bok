@@ -8,6 +8,7 @@ use App\Discount;
 use App\Http\Controllers\Util\Pdate;
 use App\Http\Controllers\Util\Pnum;
 use App\Order;
+use App\Setting;
 use App\Slider;
 use App\User;
 use Illuminate\Http\Request;
@@ -64,7 +65,80 @@ class AdminController extends Controller
   public function site(){
     $sliders = Slider::all();
     $users = User::where('role', '=', 'user')->get();
-    return view('admin.site', compact('sliders', 'users'));
+
+    $address = Setting::get(Setting::KEY_ADDRESS)->value;
+    $link1_title = Setting::get(Setting::KEY_LINK1_TITLE)->value;
+    $link1_url = Setting::get(Setting::KEY_LINK1_URL)->value;
+    $link2_title = Setting::get(Setting::KEY_LINK2_TITLE)->value;
+    $link2_url = Setting::get(Setting::KEY_LINK2_URL)->value;
+    $link3_title = Setting::get(Setting::KEY_LINK3_TITLE)->value;
+    $link3_url = Setting::get(Setting::KEY_LINK3_URL)->value;
+
+    $expert_name = Setting::get(Setting::KEY_EXPERT_NAME)->value;
+    $expert_email = Setting::get(Setting::KEY_EXPERT_EMAIL)->value;
+    $expert_direct_phone = Setting::get(Setting::KEY_EXPERT_DIRECT_PHONE)->value;
+    $expert_internal_phone = Setting::get(Setting::KEY_EXPERT_INTERNAL_PHONE)->value;
+
+    $boss_name = Setting::get(Setting::KEY_BOSS_NAME)->value;
+    $boss_email = Setting::get(Setting::KEY_BOSS_EMAIL)->value;
+    $boss_direct_phone = Setting::get(Setting::KEY_BOSS_DIRECT_PHONE)->value;
+    $boss_internal_phone = Setting::get(Setting::KEY_BOSS_INTERNAL_PHONE)->value;
+
+    return view('admin.site', compact('sliders', 'users', 'address', 'link1_title', 'link1_url', 'link2_title', 'link2_url',
+      'link3_title', 'link3_url', 'expert_name', 'expert_email', 'expert_direct_phone', 'expert_internal_phone', 'boss_name', 'boss_email', 'boss_internal_phone', 'boss_direct_phone'));
+  }
+
+  public function saveFooterData(Request $request){
+    $address = Setting::get(Setting::KEY_ADDRESS);
+    $address->value = $request->address;
+    $address->save();
+    $link1_title = Setting::get(Setting::KEY_LINK1_TITLE);
+    $link1_title->value = $request->link1_title;
+    $link1_title->save();
+    $link1_url = Setting::get(Setting::KEY_LINK1_URL);
+    $link1_url->value = $request->link1_url;
+    $link1_url->save();
+    $link2_title = Setting::get(Setting::KEY_LINK2_TITLE);
+    $link2_title->value = $request->link2_title;
+    $link2_title->save();
+    $link2_url = Setting::get(Setting::KEY_LINK2_URL);
+    $link2_url->value = $request->link2_url;
+    $link2_url->save();
+    $link3_title = Setting::get(Setting::KEY_LINK3_TITLE);
+    $link3_title->value = $request->link3_title;
+    $link3_title->save();
+    $link3_url = Setting::get(Setting::KEY_LINK3_URL);
+    $link3_url->value = $request->link3_url;
+    $link3_url->save();
+
+    $expert_name = Setting::get(Setting::KEY_EXPERT_NAME);
+    $expert_name->value = $request->expert_name;
+    $expert_name->save();
+
+    $expert_email = Setting::get(Setting::KEY_EXPERT_EMAIL);
+    $expert_email->value = $request->expert_email;
+    $expert_email->save();
+    $expert_direct_phone = Setting::get(Setting::KEY_EXPERT_DIRECT_PHONE);
+    $expert_direct_phone->value = $request->expert_direct_phone;
+    $expert_direct_phone->save();
+    $expert_internal_phone = Setting::get(Setting::KEY_EXPERT_INTERNAL_PHONE);
+    $expert_internal_phone->value = $request->expert_internal_phone;
+    $expert_internal_phone->save();
+
+    $boss_name = Setting::get(Setting::KEY_BOSS_NAME);
+    $boss_name->value = $request->boss_name;
+    $boss_name->save();
+    $boss_email = Setting::get(Setting::KEY_BOSS_EMAIL);
+    $boss_email->value = $request->boss_email;
+    $boss_email->save();
+    $boss_direct_phone = Setting::get(Setting::KEY_BOSS_DIRECT_PHONE);
+    $boss_direct_phone->value = $request->boss_direct_phone;
+    $boss_direct_phone->save();
+    $boss_internal_phone = Setting::get(Setting::KEY_BOSS_INTERNAL_PHONE);
+    $boss_internal_phone->value = $request->boss_internal_phone;
+    $boss_internal_phone->save();
+
+    return back();
   }
 
   public function sliderRemove(Request $request){
@@ -102,10 +176,11 @@ class AdminController extends Controller
   }
 
 
-  public function books(){
-    $books = Book::orderBy('id', 'desc')->paginate(10);
+  public function books(Request $request){
+    $text = $request->text;
+    $books = Book::orderBy('id', 'desc')->where('name', 'like', '%'.$text.'%')->paginate(10);
     $categories = Category::all();
-    return view('admin.books', compact(['books', 'categories']));
+    return view('admin.books', compact(['books', 'categories', 'text']));
   }
 
 
