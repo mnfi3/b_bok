@@ -62,7 +62,7 @@
                         <div class="row">
                             <legend class="col-form-label col-sm-4 pt-0">درصد تخفیف</legend>
                             <div class="col-sm-8">
-                                <input class="form-control d-inline" placeholder="درصد تخفیف را وارد کنید" type="number" name="discount_percent" required/>
+                                <input class="form-control d-inline" placeholder="درصد تخفیف را وارد کنید" type="number" value="0" name="discount_percent" required/>
                             </div>
 
                         </div>

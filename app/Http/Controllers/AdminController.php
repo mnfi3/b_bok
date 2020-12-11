@@ -189,7 +189,7 @@ class AdminController extends Controller
       'category_id' => 'numeric',
       'name' => 'required|min:1|max:200|string',
       'author' => 'required|min:1|max:200|string',
-      'description' => 'required|min:1|max:6000|string',
+//      'description' => 'required|min:1|max:6000|string',
       'publisher' => 'required|min:1|max:200|string',
       'publication_date' => 'required|min:1|max:200|string',
       'price' => 'required|min:0|max:20000000|numeric',
