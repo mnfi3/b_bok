@@ -239,9 +239,11 @@ class UserController extends Controller
 
 
 
-    $saman = new Saman(env('SAMAN_TERMINAL_ID'));
+    $saman = new Saman(env('SAMAN_TERMINAL_ID'), env('SAMAN_MID'));
     $response = $saman->requestToken((int)($order->amount * 10), $order->id, route('user-cart-pay-verify'), Auth::user()->phone);
     if ($response->status != 1){
+      echo \response()->json($response, 200, [], JSON_UNESCAPED_UNICODE);
+      die();
       $description = $response->errorDesc;
       return view('user.paymentFailed', compact('description'));
     }else{
@@ -276,7 +278,7 @@ class UserController extends Controller
     }
 
 
-    $saman = new Saman(env('SAMAN_TERMINAL_ID'));
+    $saman = new Saman(env('SAMAN_TERMINAL_ID'), env('SAMAN_MID'));
     $verify_response = $saman->verify($ref_num);
     $amount = $verify_response;
     if ($amount < 0){

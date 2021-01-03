@@ -6,7 +6,9 @@ namespace App\Http\Controllers;
 class Saman {
 
   private $terminal_id;
-  private $start_pay_url = 'https://sep.shaparak.ir/MobilePG/MobilePayment';
+  private $MID;
+//  private $start_pay_url = 'https://sep.shaparak.ir/MobilePG/MobilePayment';
+  private $start_pay_url = 'https://sep.shaparak.ir/OnlinePG/OnlinePG';
   private $redirect_url = 'https://sep.shaparak.ir/OnlinePG/OnlinePG';
   private $verify_pay_url ='https://verify.sep.ir/Payments/ReferencePayment.asmx';
 
@@ -30,7 +32,7 @@ class Saman {
     3 => 'پرداخت انجام نشد',
     4 => 'کاربر در بازه زمانی تعیین شده پاسخی ارسال نکرده است',
     5 => 'پارامترهای ارسالی نامعتبر است',
-    8 => 'آدرس سرور پذیرنده نامعتبر است ',
+    8 => 'آدرس سرور پذیرنده نامعتبر است',
     10 => 'توکن ارسال شده یافت نشد.',
     11 => 'با این شماره ترمینال فقط تراکنش های توکنی قابل پرداخت هستند',
     12 => 'شماره ترمینال ارسال شده یافت نشد',
@@ -58,8 +60,9 @@ class Saman {
 
 
 
-  public function __construct($terminal_id) {
+  public function __construct($terminal_id, $MID = '') {
     $this->terminal_id = $terminal_id;
+    $this->MID = $MID;
   }
 
 
@@ -68,6 +71,7 @@ class Saman {
       'Action' => "token",
       'Amount' => $amount,
       'TerminalId' => $this->terminal_id,
+//      'MID' => $this->terminal_id,
       'ResNum' => $order_id,
       'RedirectURL' => $redirect_url,
       'CellNumber' => $mobile,
@@ -76,6 +80,9 @@ class Saman {
 //    return $data;
 
     $str_data = json_encode($data);
+//    echo \response()->json($data);
+//    die();
+
     $response = $this->callApi($this->start_pay_url, $str_data);
     $response = json_decode($response);
     /*
@@ -107,7 +114,8 @@ class Saman {
   public function verify($ref_num){
     $data = array(
       'RefNum' => $ref_num,
-      'MID' => $this->terminal_id,
+      'TerminalId' => $this->terminal_id,
+      'MID' => $this->MID,
     );
 
     $str_data = json_encode($data);
