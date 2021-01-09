@@ -239,11 +239,9 @@ class UserController extends Controller
 
 
 
-    $saman = new Saman(env('SAMAN_TERMINAL_ID'), env('SAMAN_MID'));
+    $saman = new Saman(env('SAMAN_TERMINAL_ID'), env('SAMAN_MID'), env('SAMAN_RURCHASE_ID'), env('SAMAN_SHBA'));
     $response = $saman->requestToken((int)($order->amount * 10), $order->id, route('user-cart-pay-verify'), Auth::user()->phone);
     if ($response->status != 1){
-      echo \response()->json($response, 200, [], JSON_UNESCAPED_UNICODE);
-      die();
       $description = $response->errorDesc;
       return view('user.paymentFailed', compact('description'));
     }else{
@@ -255,40 +253,48 @@ class UserController extends Controller
 
 
   public function cartPayVerify(Request $request){
+    $MID = $_POST['MID'];
+    $state = $_POST['State'];
+    $status = $_POST['Status'];
+    $RRN = $_POST['Rrn'];
+    $ref_num = $_POST['RefNum'];
+    $order_id = $_POST['ResNum'];
+    $terminal_id = $_POST['TerminalId'];
+    $trace_no = $_POST['TraceNo'];
+    $amount = $_POST['Amount'];
+    $wage = $_POST['Wage'];
+    $secure_pan = $_POST['SecurePan'];
 
-    $MID = $request->MID;
-    $state = $request->State;
-    $status = $request->Status;
-    $RRN = $request->RRN;
-    $ref_num = $request->RefNum;
-    $order_id = $request->ResNum;
-    $terminal_id = $request->TerminalId;
-    $trace_no = $request->TraceNo;
-    $amount = $request->Amount;
-    $wage = $request->Wage;
-    $secure_pan = $request->SecurePan;
 
     $order = BankOrder::find($order_id);
 
 
     if ($status != 2){
       $message = Saman::$status_messages[$status];
-      $description = "<br>تراکنش نا موفق بود در صورت کسر مبلغ از حساب شما حداکثر پس از 72 ساعت مبلغ به حسابتان برمی گردد.<br><span style='color: red'>$message</span>";
+      $description = " تراکنش ناموفق بود در صورت کسر مبلغ از حساب شما حداکثر پس از 72 ساعت مبلغ به حسابتان برمی گردد.$message";
       return view('user.paymentFailed', compact('description'));
     }
 
 
-    $saman = new Saman(env('SAMAN_TERMINAL_ID'), env('SAMAN_MID'));
+    $saman = new Saman(env('SAMAN_TERMINAL_ID'), env('SAMAN_MID'), env('SAMAN_RURCHASE_ID'), env('SAMAN_SHBA'));
     $verify_response = $saman->verify($ref_num);
-    $amount = $verify_response;
-    if ($amount < 0){
-      $message = Saman::$verify_messages[$amount];
-      $description = "<br>تراکنش نا موفق بود در صورت کسر مبلغ از حساب شما حداکثر پس از 72 ساعت مبلغ به حسابتان برمی گردد.<br><span style='color: red'>$message</span>";
+
+
+    if ($verify_response->Success == null){
+      $description = " تراکنش ناموفق بود در صورت کسر مبلغ از حساب شما حداکثر پس از 72 ساعت مبلغ به حسابتان برمی گردد.";
       return view('user.paymentFailed', compact('description'));
     }
 
-    if ($amount != (int)$order->amount){
-      $description = "<br>تراکنش نا موفق بود در صورت کسر مبلغ از حساب شما حداکثر پس از 72 ساعت مبلغ به حسابتان برمی گردد.<br>";
+    if ($verify_response->Success != true ){
+//      $message = Saman::$verify_messages[$amount];
+      $message = $verify_response->ResultDescription;
+      $description = " تراکنش ناموفق بود در صورت کسر مبلغ از حساب شما حداکثر پس از 72 ساعت مبلغ به حسابتان برمی گردد.$message";
+      return view('user.paymentFailed', compact('description'));
+    }
+
+    if ($verify_response->TransactionDetail->OrginalAmount / 10 != $order->amount){
+//      $message = $verify_response->ResultDescription;
+      $description = " مبلغ پرداخت شده با مبلغ سفارش برابر نیست.لطفا با مدیریت تماس بگیرید";
       return view('user.paymentFailed', compact('description'));
     }
 
@@ -312,7 +318,7 @@ class UserController extends Controller
       ]);
 
       //generate buy_code
-      $buy_code = $order->id . ((int)($status / 2));
+      $buy_code = $order->id . ((int)($system_trace_no / 2));
 
       $new_order = Order::create([
         'user_id' => $user->id,
@@ -353,7 +359,7 @@ class UserController extends Controller
 
 
 
-
+    $description = 'پرداخت با موفقیت انجام شد';
     return view('user.paymentSuccess', compact(['description', 'retrival_ref_no', 'system_trace_no', 'amount', 'buy_code']));
 
   }

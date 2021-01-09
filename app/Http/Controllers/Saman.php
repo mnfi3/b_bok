@@ -3,14 +3,19 @@
 namespace App\Http\Controllers;
 
 
+use SoapClient;
+
 class Saman {
 
   private $terminal_id;
   private $MID;
+  private $purchase_id;
+  private $shba;
 //  private $start_pay_url = 'https://sep.shaparak.ir/MobilePG/MobilePayment';
   private $start_pay_url = 'https://sep.shaparak.ir/OnlinePG/OnlinePG';
   private $redirect_url = 'https://sep.shaparak.ir/OnlinePG/OnlinePG';
-  private $verify_pay_url ='https://verify.sep.ir/Payments/ReferencePayment.asmx';
+//  private $verify_pay_url ='https://verify.sep.ir/Payments/ReferencePayment.asmx?WSDL';
+  private $verify_pay_url ='https://sep.shaparak.ir/verifyTxnRandomSessionkey/ipg/VerifyTransaction';
 
 
 
@@ -60,9 +65,12 @@ class Saman {
 
 
 
-  public function __construct($terminal_id, $MID = '') {
+  public function __construct($terminal_id, $MID = '', $purchase_id = '', $shba = '') {
     $this->terminal_id = $terminal_id;
     $this->MID = $MID;
+    $this->purchase_id = $purchase_id;
+    $this->shba = $shba;
+
   }
 
 
@@ -71,17 +79,17 @@ class Saman {
       'Action' => "token",
       'Amount' => $amount,
       'TerminalId' => $this->terminal_id,
-//      'MID' => $this->terminal_id,
+      'MID' => $this->MID,
       'ResNum' => $order_id,
       'RedirectURL' => $redirect_url,
       'CellNumber' => $mobile,
+      'SettlementIBANInfo' => [['IBAN' => $this->shba, 'Amount' => $amount, 'PurchaseId' => $this->purchase_id, '']]
     );
 
-//    return $data;
+
 
     $str_data = json_encode($data);
-//    echo \response()->json($data);
-//    die();
+
 
     $response = $this->callApi($this->start_pay_url, $str_data);
     $response = json_decode($response);
@@ -99,13 +107,14 @@ class Saman {
 
   public function redirecToPaymentPage($token){
     $str =
-      "
+      "<body onload=\"setTimeout(function() { document.frm1.submit() }, 5)\">
       <h3 style='text-align: center'>در حال انتقال به صفحه پرداخت...</h3>
-      <form onload=\"document.forms['forms'].submit()\" action=\"$this->redirect_url\" method=\"post\">
+      <form name=\"frm1\" onload=\"document.forms['forms'].submit()\" action=\"$this->redirect_url\" method=\"post\">
       <input type=\"hidden\" name=\"Token\" value=\"$token\" />
-      <input name=\"GetMethod\" type=\"text\" value=\"false\"> <!--true | false | empty string | null-->
+      <input type=\"hidden\" name=\"GetMethod\" type=\"text\" value=\"false\"> <!--true | false | empty string | null-->
+      <button type=\"submit\"> برو به صفحه پرداخت</button>
       </form>
-    ";
+    </body>";
 
     die($str);
   }
@@ -114,8 +123,10 @@ class Saman {
   public function verify($ref_num){
     $data = array(
       'RefNum' => $ref_num,
-      'TerminalId' => $this->terminal_id,
       'MID' => $this->MID,
+      'TerminalNumber' => $this->terminal_id,
+      'NationalCode' => "Null",
+      'IgnoreNationalCode' => true,
     );
 
     $str_data = json_encode($data);
@@ -125,6 +136,7 @@ class Saman {
     }catch (\Exception $e){}
     return $response;
   }
+
 
 
 
